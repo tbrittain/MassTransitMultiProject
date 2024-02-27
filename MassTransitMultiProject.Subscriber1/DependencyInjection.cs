@@ -1,19 +1,31 @@
 ﻿using MassTransit;
+using MassTransitMultiProject.Subscriber1.Consumers;
 
 namespace MassTransitMultiProject.Subscriber1;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddWebApi(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddMassTransitConsumers(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMassTransit(x =>
         {
+            x.AddConsumer<FirstConsumer>();
+            x.AddConsumer<SecondConsumer>();
+
             x.UsingRabbitMq((context, cfg) =>
             {
-                var host = configuration["RabbitMQ:Host"] ?? "localhost";
-                var port = configuration["RabbitMQ:Port"] ?? "5672";
-                var username = configuration["RabbitMQ:Username"] ?? "guest";
-                var password = configuration["RabbitMQ:Password"] ?? "guest";
+                var host = !string.IsNullOrWhiteSpace(configuration["RabbitMQ:Host"]) 
+                    ? configuration["RabbitMQ:Host"] 
+                    : "localhost";
+                var port = !string.IsNullOrWhiteSpace(configuration["RabbitMQ:Port"]) 
+                    ? configuration["RabbitMQ:Port"] 
+                    : "5672";
+                var username = !string.IsNullOrWhiteSpace(configuration["RabbitMQ:Username"]) 
+                    ? configuration["RabbitMQ:Username"] 
+                    : "guest";
+                var password = !string.IsNullOrWhiteSpace(configuration["RabbitMQ:Password"]) 
+                    ? configuration["RabbitMQ:Password"] 
+                    : "guest";
 
                 cfg.Host($"rabbitmq://{host}:{port}",
                     h =>

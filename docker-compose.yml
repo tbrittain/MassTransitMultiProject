@@ -1,0 +1,24 @@
+﻿services:
+  masstransitmultiproject.webapi:
+    image: masstransitmultiproject.webapi
+    build:
+      context: .
+      dockerfile: MassTransitMultiProject.WebApi/Dockerfile
+    ports:
+      - "5236:5236"
+      - "5000:5000"
+
+  masstransitmultiproject.subscriber1:
+    image: masstransitmultiproject.subscriber1
+    build:
+      context: .
+      dockerfile: MassTransitMultiProject.Subscriber1/Dockerfile
+  rabbitmq:
+    image: "rabbitmq:3.13.0-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - "rabbitmq_data:/data"
+volumes:
+  rabbitmq_data:

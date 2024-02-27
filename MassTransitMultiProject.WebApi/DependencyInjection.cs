@@ -10,10 +10,18 @@ public static class DependencyInjection
         {
             x.UsingRabbitMq((_, cfg) =>
             {
-                var host = configuration["RabbitMQ:Host"] ?? "localhost";
-                var port = configuration["RabbitMQ:Port"] ?? "5672";
-                var username = configuration["RabbitMQ:Username"] ?? "guest";
-                var password = configuration["RabbitMQ:Password"] ?? "guest";
+                var host = !string.IsNullOrWhiteSpace(configuration["RabbitMQ:Host"]) 
+                    ? configuration["RabbitMQ:Host"] 
+                    : "localhost";
+                var port = !string.IsNullOrWhiteSpace(configuration["RabbitMQ:Port"]) 
+                    ? configuration["RabbitMQ:Port"] 
+                    : "5672";
+                var username = !string.IsNullOrWhiteSpace(configuration["RabbitMQ:Username"]) 
+                    ? configuration["RabbitMQ:Username"] 
+                    : "guest";
+                var password = !string.IsNullOrWhiteSpace(configuration["RabbitMQ:Password"]) 
+                    ? configuration["RabbitMQ:Password"] 
+                    : "guest";
 
                 cfg.Host($"rabbitmq://{host}:{port}",
                     h =>
